@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "dbt-to-junit"
 dynamic = ["version"]
-description = ""
+description = "Convert dbt's target/run_results.json into a JUnit XML report so Azure DevOps (ADO) can display dbt test results in the Tests tab."
 readme = "README.md"
 requires-python = ">=3.8"
 authors = [
@@ -36,9 +36,9 @@ dev = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/yourusername/dbt-junit-xml#readme"
-Issues = "https://github.com/yourusername/dbt-junit-xml/issues"
-Source = "https://github.com/yourusername/dbt-junit-xml"
+Documentation = "https://github.com/jorgecontrerasostos/dbt-junit-xml#readme"
+Issues = "https://github.com/jorgecontrerasostos/dbt-junit-xml/issues"
+Source = "https://github.com/jorgecontrerasostos/dbt-junit-xml"
 
 [project.scripts]
 dbt-junit-xml = "src.main:main"
@@ -146,6 +146,7 @@ exclude_lines = [
 dev = [
     "black>=24.8.0",
     "build>=1.2.2.post1",
+    "hatch>=1.14.2",
     "pytest>=8.3.5",
     "pytest-cov>=5.0.0",
     "ruff>=0.14.10",

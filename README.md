@@ -37,7 +37,7 @@ python -m src.main --input target/run_results.json --output dbt-junit.xml
 - `--log-level`: `DEBUG|INFO|WARNING|ERROR` (default: `INFO`)
 - `--include-models`: include non-test nodes as testcases (default: **off**)
 
-## Exit codes (CI-friendly)
+## Exit codes
 
 - **0**: report generated and **no failing dbt tests**
 - **1**: report generated and **at least one dbt test failed/errored**
@@ -65,4 +65,3 @@ Run dbt (which produces `target/run_results.json`), generate the JUnit XML, then
 
 - If your pipeline working directory is not the dbt project root, pass an explicit `--input` path.
 - If you only want dbt tests in ADO, do **not** pass `--include-models` (default behavior already filters to tests).
-
