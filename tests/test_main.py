@@ -1,6 +1,7 @@
 """Tests for main module."""
 
 import pytest
+
 from src.main import main
 
 

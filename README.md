@@ -1,46 +1,68 @@
-# dbt-junit-xml
+# dbt to JUnit XML
 
-A Python project created with uv and ruff.
+Convert dbt's `target/run_results.json` into a **JUnit XML** report so Azure DevOps (ADO) can display dbt test results in the **Tests** tab.
 
-## Development
+This tool is designed for CI: it reads the run results produced by `dbt build`, generates a single JUnit report, and writes it to a file that can be published by ADO.
 
-This project uses [uv](https://docs.astral.sh/uv/) for dependency management and [ruff](https://docs.astral.sh/ruff/) for linting and formatting.
+## What it reads
 
-### Setup
+- **Input**: dbt `run_results.json` (typically `target/run_results.json`)
+- **Source of truth**: the `results` list inside that file
+- **Filtering**: by default, **only dbt tests** are included (`unique_id` starts with `test.`)
 
-1. Install dependencies:
-   ```bash
-   uv sync
-   ```
+## What it writes
 
-2. Run the application:
-   ```bash
-   uv run dbt-junit-xml
-   ```
+- **Output**: a JUnit XML file (default: `dbt-junit.xml`)
+- **Structure**: one `<testsuite>` containing one `<testcase>` per dbt test
 
-### Development Commands
+## Install / run (local)
 
-- Run tests:
-  ```bash
-  uv run pytest
-  ```
+If you're using this repo with `uv`:
 
-- Run tests with coverage:
-  ```bash
-  uv run pytest --cov
-  ```
+```bash
+uv sync
+uv run dbt-junit-xml --input target/run_results.json --output dbt-junit.xml
+```
 
-- Lint code:
-  ```bash
-  uv run ruff check
-  ```
+You can also run it directly with Python:
 
-- Format code:
-  ```bash
-  uv run ruff format
-  ```
+```bash
+python -m src.main --input target/run_results.json --output dbt-junit.xml
+```
 
-- Check and fix linting issues:
-  ```bash
-  uv run ruff check --fix
-  ```
+## CLI options
+
+- `--input`: path to `run_results.json` (default: `target/run_results.json`)
+- `--output`: output XML path (default: `dbt-junit.xml`)
+- `--log-level`: `DEBUG|INFO|WARNING|ERROR` (default: `INFO`)
+- `--include-models`: include non-test nodes as testcases (default: **off**)
+
+## Exit codes (CI-friendly)
+
+- **0**: report generated and **no failing dbt tests**
+- **1**: report generated and **at least one dbt test failed/errored**
+- **2**: could not generate report (missing file, invalid JSON, unexpected format, etc.)
+
+## Azure DevOps pipeline example
+
+Run dbt (which produces `target/run_results.json`), generate the JUnit XML, then publish it:
+
+```yaml
+- script: |
+    dbt build
+    dbt-junit-xml --input target/run_results.json --output dbt-junit.xml
+  displayName: "Run dbt and generate JUnit report"
+
+- task: PublishTestResults@2
+  displayName: "Publish dbt test results"
+  inputs:
+    testResultsFormat: "JUnit"
+    testResultsFiles: "dbt-junit.xml"
+    failTaskOnFailedTests: true
+```
+
+## Notes / tips
+
+- If your pipeline working directory is not the dbt project root, pass an explicit `--input` path.
+- If you only want dbt tests in ADO, do **not** pass `--include-models` (default behavior already filters to tests).
+
