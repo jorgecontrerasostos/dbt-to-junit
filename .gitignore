@@ -149,3 +149,5 @@ cython_debug/
 .uv/
 
 tests/
+
+dbt-junit.xml
