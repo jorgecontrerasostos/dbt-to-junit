@@ -142,14 +142,12 @@ def _to_junit_xml(
         if not include_models and not is_test:
             continue
 
-        # Grouping for ADO UI: classname is like "test.jaffle_shop" or "model.jaffle_shop"
         parts = unique_id.split(".")
         classname = ".".join(parts[:2]) if len(parts) >= 2 else parts[0]
         name = ".".join(parts[2:]) if len(parts) >= 3 else unique_id
 
         test_case = TestCase(name=name, classname=classname, elapsed_sec=elapsed_sec)
 
-        # Prefer explicit message fields when present; fall back to adapter_response/message.
         message = result.get("message")
         if message is None and isinstance(result.get("adapter_response"), dict):
             message = result["adapter_response"].get("_message")
