@@ -37,6 +37,36 @@ python -m src.main --input target/run_results.json --output dbt-junit.xml
 - `--log-level`: `DEBUG|INFO|WARNING|ERROR` (default: `INFO`)
 - `--include-models`: include non-test nodes as testcases (default: off)
 
+## Help
+
+You can also run the following command to get some help in the terminal:
+
+```bash
+uv run dbt-junit-xml --help
+```
+
+or
+
+```bash
+python -m src.main --help
+```
+
+Response:
+
+```bash
+usage: dbt-junit-xml [-h] [--input INPUT] [--output OUTPUT] [--include-models] [--log-level LOG_LEVEL]
+
+Convert dbt run_results.json to JUnit XML.
+
+options:
+  -h, --help            show this help message and exit
+  --input INPUT         Path to dbt run_results.json (default: target/run_results.json)
+  --output OUTPUT       Path to write JUnit XML (default: dbt-junit.xml)
+  --include-models      Include model results as testcases (default: only dbt tests).
+  --log-level LOG_LEVEL
+                        Logging level (DEBUG, INFO, WARNING, ERROR). Default: INFO
+```
+
 ## Exit codes
 
 - **0**: report generated and no failing dbt tests
